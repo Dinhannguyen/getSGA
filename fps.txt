@@ -1,0 +1,8 @@
+--// FPS Lock Script (set FPS = 15)
+-- Giới hạn tốc độ khung hình xuống còn 15 FPS
+
+if setfpscap then
+    setfpscap(15)
+else
+    warn("⚠️ Executor của bạn không hỗ trợ setfpscap().")
+end

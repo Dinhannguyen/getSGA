@@ -1,0 +1,28 @@
+local AutoBuy = true -- Every 10 seconds will automatically equip weapon again, true = on and false = off
+local MeleeNumber = 1
+
+local MeleeList = {
+    [1] = "BuySanguineArt",
+    [2] = "BuyGodhuman", 
+    [3] = "BuyDragonTalon",
+}
+
+function BuyMelee()
+    local MeleeName = MeleeList[MeleeNumber]
+    if MeleeName then
+        pcall(function()
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(MeleeName)
+        end)
+    end
+end
+
+BuyMelee()
+
+if AutoBuy then
+    spawn(function()
+        while AutoBuy do
+            wait(1)
+            BuyMelee()
+        end
+    end)
+end

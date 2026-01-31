@@ -1,0 +1,92 @@
+local CHECK_INTERVAL = 1
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local player = Players.LocalPlayer
+
+local FOLDER_PATH = "levi"
+local USERNAME = game.Players.LocalPlayer.Name
+
+-- Không chạy script nếu username là "baohan_200"
+if USERNAME == "baohan_200" then
+    return -- Dừng script tại đây
+end
+
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until player
+
+local function hasSanguineArt()
+    -- Kiểm tra trong inventory
+    local found = false
+    local success, result = pcall(function()
+        local remote = ReplicatedStorage:FindFirstChild("Remotes") and ReplicatedStorage.Remotes:FindFirstChild("CommF_")
+        if remote and remote.InvokeServer then
+            return remote:InvokeServer("getInventory")
+        end
+        return nil
+    end)
+    if success and typeof(result) == "table" then
+        for _, item in ipairs(result) do
+            if item and item.Name and string.lower(item.Name):find("sanguine art") then
+                found = true
+                break
+            end
+        end
+    end
+    if found then return true end
+
+    -- Kiểm tra đang trang bị
+    local char = player.Character
+    if char then
+        for _, tool in ipairs(char:GetChildren()) do
+            if tool:IsA("Tool") and string.lower(tool.Name):find("sanguine art") then
+                return true
+            end
+        end
+    end
+    -- Kiểm tra trong Backpack
+    local backpack = player:FindFirstChild("Backpack")
+    if backpack then
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:IsA("Tool") and string.lower(tool.Name):find("sanguine art") then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function checkAndWrite()
+    if listfiles then
+        for _, filePath in ipairs(listfiles(FOLDER_PATH)) do
+            if filePath:sub(-4) == ".txt" then
+                local content = readfile(filePath)
+                for line in content:gmatch("[^\r\n]+") do
+                    if line == USERNAME then
+                        local fileName = filePath:match("([^\\/]*)%.txt$")
+                        if fileName then
+                            writefile(filePath, "Completed-" .. fileName)
+                            print("Đã cập nhật: " .. filePath)
+                        end
+                        break
+                    end
+                end
+            end
+        end
+    end
+end
+
+checkAndWrite()
+
+spawn(function()
+    while true do
+        if hasSanguineArt() then
+            if writefile then
+                writefile(player.Name .. ".txt", "Completed-SGA")
+            end
+            print("Đã phát hiện Sanguine Art, ghi file thành công!")
+            break
+        end
+        task.wait(CHECK_INTERVAL)
+    end
+end)

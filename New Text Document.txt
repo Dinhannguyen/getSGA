@@ -1,0 +1,71 @@
+repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+
+-- ⚠️ Không hoạt động với username "baohan_200"
+if player.Name == "baohan_200" then
+    warn("⛔ Script không hoạt động với tài khoản baohan_200.")
+    return
+end
+
+-- 🕐 Chờ nhân vật spawn và có tọa độ
+local function waitForSpawn()
+	repeat task.wait(1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+	local root = player.Character:FindFirstChild("HumanoidRootPart")
+	repeat task.wait(0.5) until root and root.Position
+	print("✅ Player đã spawn tại tọa độ:", root.Position)
+end
+
+-- 🔍 Lấy Inventory
+local function getInventory()
+	local remotes = ReplicatedStorage:FindFirstChild("Remotes")
+	if not remotes then return nil end
+	local commF = remotes:FindFirstChild("CommF_")
+	if not commF or not commF.InvokeServer then return nil end
+	local success, result = pcall(function()
+		return commF:InvokeServer("getInventory")
+	end)
+	return success and typeof(result) == "table" and result or nil
+end
+
+-- 📦 Đếm Vampire Fang
+local function countVampireFang(inv)
+	local count = 0
+	if not inv then return count end
+	for _, item in ipairs(inv) do
+		local name = tostring(item.Name or item.name or ""):lower()
+		if name:find("vampire") and name:find("fang") then
+			local amount = tonumber(item.Count or item.count or item.Amount or 1) or 1
+			count = count + amount
+		end
+	end
+	return count
+end
+
+-- 💀 Reset nhân vật
+local function resetCharacter()
+	if player.Character then
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid.Health = 0
+			print("💀 Đã reset nhân vật do Vampire Fang < 20")
+		end
+	end
+end
+
+-- 🕒 Chờ spawn xong rồi bắt đầu
+waitForSpawn()
+print("🔁 Bắt đầu kiểm tra Vampire Fang...")
+
+while true do
+	local inv = getInventory()
+	local fangCount = countVampireFang(inv)
+	print("🩸 Vampire Fang hiện có:", fangCount)
+	
+	if fangCount < 20 then
+		resetCharacter()
+	end
+
+	task.wait(10) -- ⏳ Reset mỗi 10 giây nếu <20
+end
