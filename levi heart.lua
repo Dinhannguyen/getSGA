@@ -36,45 +36,53 @@ getgenv().Config = {
 	["Start Hunt Leviathan"] = true
 }
 else
-    getgenv().Config = {
+getgenv().Config = {
 	["Shoot Heart When Ice Spike Breaks"] = true,
-	["Select Rarity Scroll "] = {
-		[1] = "Mythical"
-	},
-	["Webhook Destroy IDK"] = false,
-	["Drive Boat To Tiki"] = true,
-	["Use Click M1 Fruit"] = false,
 	["No Frog"] = true,
-	["Use New Method Shoot Heart"] = false,
+	["Select Skills Blox Fruit"] = {
+		[1] = "X",
+		[2] = "C",
+		[3] = "Z",
+		[4] = "F",
+		[5] = "V"
+	},
+	["Drive Boat To Tiki"] = true,
+	["Webhook Find Leviathan"] = false,
+	["Webhook Destroy IDK"] = false,
+	["Select Skills Sword"] = {
+		[1] = "X",
+		[2] = "Z"
+	},
 	["Random Devil Fruit"] = false,
 	["Use skill fast dont hold"] = true,
 	["Select Sea Events"] = {
 
 	},
-	["Select Skills Blox Fruit"] = {
-
+	["Select Rarity Scroll "] = {
+		[1] = "Mythical"
 	},
 	["Webhook Shoot Heart Leviathan"] = false,
-	["Webhook Find Leviathan"] = false,
+	["Select Skills Gun"] = {
+		[1] = "X",
+		[2] = "Z"
+	},
 	["Auto Chest Hop"] = false,
 	["Auto Farm Material Sanguine Art"] = false,
 	["Webhook Unlock Draco v4"] = false,
 	["Auto light the torch"] = false,
-	["Webhook Drive To Tiki/Hydra"] = false,
-	["Select Skills Sword"] = {
-
-	},
+	["Use New  Method Drive"] = false,
+	["Use Click M1 Fruit"] = false,
 	["Select Skills Melee"] = {
-
-	},
-	["Boost Fps"] = true,
-	["Select Skills Gun"] = {
-
+		[1] = "X",
+		[2] = "C",
+		[3] = "Z"
 	},
 	["Ping Discord"] = false,
-	["Use New  Method Drive"] = false,
-	["Drive Boat To Hydra"] = false,
 	["Select Owner Boat Beast Hunter"] = "baohan_200",
+	["Boost Fps"] = true,
+	["Webhook Drive To Tiki/Hydra"] = false,
+	["Drive Boat To Hydra"] = false,
+	["Use New Method Shoot Heart"] = false,
 	["Auto Craft Scroll"] = false,
 	["Account Buy Boat"] = false,
 	["Auto Store Fruit"] = false,
@@ -86,3 +94,4 @@ repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Key = "e9162fb60364a89d94d75009"
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/BananaCat-KaitunLevi.lua"))()
+
