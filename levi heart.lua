@@ -6,7 +6,7 @@ getgenv().Config = {
 	["Drive Boat To Tiki"] = true,
 	["No Frog"] = true,
 	["Random Devil Fruit"] = false,
-	["Use skill fast dont hold"] = true,
+	["Use skill fast dont hold"] = false,
 	["Select Sea Events"] = {
 
 	},
@@ -22,7 +22,7 @@ getgenv().Config = {
 	["Webhook Unlock Draco v4"] = false,
 	["Auto light the torch"] = false,
 	["Boost Fps"] = false,
-	["Use Click M1 Fruit"] = false,
+	["Use Click M1 Fruit"] = true,
 	["Use New Method Shoot Heart"] = false,
 	["Webhook Drive To Tiki/Hydra"] = false,
 	["Webhook Find Leviathan"] = false,
@@ -54,7 +54,7 @@ getgenv().Config = {
 		[2] = "Z"
 	},
 	["Random Devil Fruit"] = false,
-	["Use skill fast dont hold"] = true,
+	["Use skill fast dont hold"] = false,
 	["Select Sea Events"] = {
 
 	},
@@ -94,4 +94,5 @@ repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Key = "e9162fb60364a89d94d75009"
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/BananaCat-KaitunLevi.lua"))()
+
 
