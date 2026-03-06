@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
 -- ⚠️ Không hoạt động với username "baohan_200"
-if player.Name == "baohan_200" then
+if player.Name == "G10n0g10vanna" then
     warn("⛔ Script không hoạt động với tài khoản baohan_200.")
     return
 end
@@ -69,3 +69,4 @@ while true do
 
 	task.wait(10) -- ⏳ Reset mỗi 10 giây nếu <20
 end
+
