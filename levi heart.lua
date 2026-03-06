@@ -83,5 +83,6 @@ else
 end
 
 -- Thực thi script chính
-getgenv().Key = "e9162fb60364a89d94d75009"
+getgenv().Key = "1fac947ad1d37c7fc21830fd"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/BananaCat-KaitunLevi.lua"))()
+
