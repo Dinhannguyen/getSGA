@@ -1,92 +1,103 @@
-local CHECK_INTERVAL = 1
+local CHECK_INTERVAL = 3 -- Kiểm tra mỗi 3 giây theo yêu cầu
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
-local FOLDER_PATH = "levi"
-local USERNAME = game.Players.LocalPlayer.Name
-
--- Không chạy script nếu username là "baohan_200"
-if USERNAME == "baohan_200" then
-    return -- Dừng script tại đây
-end
+local USERNAME = player.Name
+if USERNAME == "baohan_200" then return end
 
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until player
 
-local function hasSanguineArt()
-    -- Kiểm tra trong inventory
-    local found = false
+-- Biến lưu trữ kết quả 5 lần gần nhất để xác thực
+local history = {}
+
+-- Hàm lấy thông tin item từ Inventory
+local function getInventoryData()
     local success, result = pcall(function()
         local remote = ReplicatedStorage:FindFirstChild("Remotes") and ReplicatedStorage.Remotes:FindFirstChild("CommF_")
         if remote and remote.InvokeServer then
             return remote:InvokeServer("getInventory")
         end
-        return nil
     end)
-    if success and typeof(result) == "table" then
-        for _, item in ipairs(result) do
-            if item and item.Name and string.lower(item.Name):find("sanguine art") then
-                found = true
-                break
-            end
-        end
-    end
-    if found then return true end
-
-    -- Kiểm tra đang trang bị
-    local char = player.Character
-    if char then
-        for _, tool in ipairs(char:GetChildren()) do
-            if tool:IsA("Tool") and string.lower(tool.Name):find("sanguine art") then
-                return true
-            end
-        end
-    end
-    -- Kiểm tra trong Backpack
-    local backpack = player:FindFirstChild("Backpack")
-    if backpack then
-        for _, tool in ipairs(backpack:GetChildren()) do
-            if tool:IsA("Tool") and string.lower(tool.Name):find("sanguine art") then
-                return true
-            end
-        end
-    end
-    return false
+    return (success and typeof(result) == "table") and result or {}
 end
 
-local function checkAndWrite()
-    if listfiles then
-        for _, filePath in ipairs(listfiles(FOLDER_PATH)) do
-            if filePath:sub(-4) == ".txt" then
-                local content = readfile(filePath)
-                for line in content:gmatch("[^\r\n]+") do
-                    if line == USERNAME then
-                        local fileName = filePath:match("([^\\/]*)%.txt$")
-                        if fileName then
-                            writefile(filePath, "Completed-" .. fileName)
-                            print("Đã cập nhật: " .. filePath)
-                        end
-                        break
+-- Hàm kiểm tra trạng thái dựa trên ưu tiên
+local function checkStatus()
+    local inventory = getInventoryData()
+    local hasSGA = false
+    local vampireCount = 0
+
+    -- 1. Kiểm tra Sanguine Art (trong Inventory)
+    for _, item in ipairs(inventory) do
+        local itemName = string.lower(item.Name or "")
+        if itemName:find("sanguine art") then
+            hasSGA = true
+        end
+        if itemName:find("vampire fang") then
+            vampireCount = item.Count or 0
+        end
+    end
+
+    -- 2. Kiểm tra Sanguine Art (đang cầm trên tay hoặc trong Backpack)
+    if not hasSGA then
+        local searchLoc = {player.Character, player:FindFirstChild("Backpack")}
+        for _, loc in ipairs(searchLoc) do
+            if loc then
+                for _, tool in ipairs(loc:GetChildren()) do
+                    if tool:IsA("Tool") and string.lower(tool.Name):find("sanguine art") then
+                        hasSGA = true; break
                     end
                 end
             end
+            if hasSGA then break end
         end
     end
+
+    -- logic ưu tiên: SGA > Vampire Fang < 20
+    if hasSGA then
+        return "Completed-SGA"
+    elseif vampireCount < 20 then
+        return "Completed-notSGA"
+    end
+    
+    return nil -- Không thỏa điều kiện nào
 end
 
-checkAndWrite()
-
+-- Vòng lặp chính
 spawn(function()
     while true do
-        if hasSanguineArt() then
-            if writefile then
-                writefile(player.Name .. ".txt", "Completed-SGA")
+        local currentResult = checkStatus()
+
+        if currentResult then
+            table.insert(history, currentResult)
+            
+            -- Chỉ giữ lại 5 kết quả gần nhất
+            if #history > 5 then
+                table.remove(history, 1)
             end
-            print("Đã phát hiện Sanguine Art, ghi file thành công!")
-            break
+
+            -- Kiểm tra xem 5 lần gần nhất có giống hệt nhau không
+            if #history == 5 then
+                local allSame = true
+                for i = 1, #history do
+                    if history[i] ~= currentResult then
+                        allSame = false
+                        break
+                    end
+                end
+
+                if allSame and writefile then
+                    writefile(USERNAME .. ".txt", currentResult)
+                    print("Đã ghi file: " .. currentResult .. " (Xác minh 5 lần thành công)")
+                end
+            end
+        else
+            -- Nếu không thỏa điều kiện, reset lịch sử để tránh ghi nhầm
+            history = {}
         end
+
         task.wait(CHECK_INTERVAL)
     end
 end)
