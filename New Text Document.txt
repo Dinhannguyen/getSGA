@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
 -- ⚠️ Không hoạt động với username "baohan_200"
-if player.Name == "G10n0g10vanna" then
+if player.Name == "XxSparkC0dexX2003" then
     warn("⛔ Script không hoạt động với tài khoản baohan_200.")
     return
 end
