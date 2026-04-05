@@ -1,7 +1,7 @@
 -- Chờ game load xong hoàn toàn
 repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer
 
-local targetOwners = {"cutevidai", "baohan_200"}
+local targetOwners = {"XxSparkC0dexX2003", "baohan_200"}
 local foundOwner = nil
 
 -- Vòng lặp kiểm tra xem trong server có 1 trong 2 người này không
@@ -21,7 +21,7 @@ until foundOwner
 -- Khi đã tìm thấy chủ thuyền, bắt đầu thiết lập Config
 local username = game.Players.LocalPlayer.Name
 
-if username == "cutevidai" or username == "baohan_200" then
+if username == "XxSparkC0dexX2003" or username == "baohan_200" then
     getgenv().Config = {
         ["Shoot Heart When Ice Spike Breaks"] = true,
         ["Drive Boat To Tiki"] = true,
