@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
 local USERNAME = player.Name
-if USERNAME == "baohan_200" then return end
+if USERNAME == "XxSparkC0dexX2003" then return end
 
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until player
